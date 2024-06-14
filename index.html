@@ -1,0 +1,81 @@
+<head>
+	<title>AI Rock Paper Scissors v0.1</title>
+	<link rel='stylesheet' type="text/css" href="./styles.css">
+	<link rel="icon" type="image/x-icon" href="./dinkmyoup.jpg">  
+</head>
+
+<body>
+	<div id="instructions">
+		<p>Let's play Rock/Paper/Scissors!<br>
+		Rock smashes Scissors, Scissors cut Paper, and Paper covers Rock</p>
+	</div>
+
+	<div id="game">&nbsp</div>
+
+	<div id="userInput">
+		<input type="text" id="plyInput" name="plyChoice" placeholder="Select Rock, Paper, or Scissors." onkeydown="keyChecker(this)" />
+		<input type="button" id="btnSubmit" name="btnSubmit" value="SUBMIT" />
+	</div>
+</body>
+
+<script>
+	var plyrChoice, plyrChoiceText, compChoice, compChoiceText, options;
+	options = ["rock", "paper", "scissors"], weights = [32, 32, 32];
+
+	document.getElementById("btnSubmit").addEventListener("click", logic);
+
+	function keyChecker(element){
+		if(event.key == "Enter"){
+			logic();
+		}
+	}
+
+	function logic(){
+		var message;
+		plyrChoiceText = document.getElementById("plyInput").value;
+
+		if (options.includes(plyrChoiceText.toLowerCase())){
+
+
+			compChoice = Math.random(); // random number from 0 - 1
+
+			// compChoice = Math.floor(compChoice * 3); // convert to [0,1,2]
+			compChoice *= (weights[0] + weights[1] + weights[2]);
+			// compChoiceText = options[compChoice];
+
+			compChoiceText = "rock";
+			if (compChoice > weights[0]){
+				compChoiceText = "paper";
+			}
+			if (compChoice > weights[0] + weights[1]){
+				compChoiceText = "scissors";
+			}
+
+			compChoice = options.indexOf(compChoiceText);
+			plyrChoice = options.indexOf(plyrChoiceText);
+			
+			var result = (3+(plyrChoice - compChoice)) % 3;
+
+			if (result == 0){
+				message = "I PICKED '"+compChoiceText+"' YOU PICKED '"+plyrChoiceText+"' WE TIED";
+			}
+			else if (result == 1){
+				message = "I PICKED '"+compChoiceText+"' YOU PICKED '"+plyrChoiceText+"' YOU WIN";
+				weights[compChoice] *= 0.5;
+			}
+			else {
+				message = "I PICKED '"+compChoiceText+"' YOU PICKED '"+plyrChoiceText+"' YOU LOSE";
+				weights[compChoice] *= 2;
+			}
+		}
+
+		else{
+			message = "PLEASE ONLY CHOOSE ROCK, PAPER, SCISSORS"
+		}
+
+
+		document.getElementById("game").innerHTML = document.getElementById("game").innerHTML + "<p>" + message + "</p>";
+		document.getElementById("plyInput").value = "";
+		// document.getElementById("game").innerHTML = document.getElementById("game").innerHTML + "<p>" + compChoice + plyrChoice + result + "</p>";
+	}
+</script>
